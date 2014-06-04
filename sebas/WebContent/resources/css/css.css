@@ -1,0 +1,116 @@
+@CHARSET "ISO-8859-1";
+
+/* padrões */
+/* para que todos os elementos se comportem considerando o seu tamanho com width e height independente de usar padding e border */
+* {-moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;}
+
+/* reseta todos os elementos por questões de compatibilidade com navegadores */
+* {border:0; padding:0; margin:0;}
+
+html, body {height:100%; font-family:verdana, arial, sans-serif; font-size:12px; overflow-x:hidden;}
+body * {font-size:1em;}
+table, input, textarea {width:100%;}
+table tr td {vertical-align:top;}
+
+/* estilos para o login */
+body.login {background:#eee;}
+body.login section {position:relative; top:10%; max-width:450px; margin:0 auto; border:1px solid #555; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; background:#fff; box-shadow:1px 1px 20px #000;}
+body.login section header {padding:25px 10px;}
+body.login section header span {width:100px; margin-top:-40px;}
+body.login section footer {padding:10px; text-align:center; color:#777; font-size:0.8em;}
+body.login section footer img {width:50%;}
+body.login section form .painelCampos {border:none; margin:15px 0;}
+body.login section form .painelCampos input,
+body.login section form .painelCampos button {width:100%; display:block; padding:10px; height:auto;} 
+body.login section form .painelCampos input {font-size:1.2em !important; -webkit-box-shadow:none; box-shadow:none;}
+body.login section form .painelCampos input:focus {box-shadow:0px 0px 10px 2px #85b2cb;}
+/* quando a altura da tela for menor que 350 a percentagem do topo precisa ser tirada, pois o espaço é pequeno  */
+@media all and (max-height:350px) {
+	body.login section {top:0;}
+}
+
+/* estilos para o template padrão do sistema */
+body {background:#fff;}
+body section {margin:0 auto; border:none; background:#fff;}
+body section header {padding:40px; text-align:left; background:#F8F7F0; color:#fff;}
+body section header h1 {position:relative; top:5px; font-size:1.3em; text-shadow:2px 2px #777; display:inline;}
+body section header span {float:left; width:330px; margin-right:15px; color:#000; font-size:2em; font-weight:bold; text-shadow:2px 2px #999;}
+body section header span img {width:100%; float:left;}
+body section header .ui-inputfield {float: right; backgroud: #3F9AC9}
+body section header p {display:block; font-weight:bold; margin:5px; float:right; text-shadow:1px 1px 1px #000;}
+body section header p.linkMenu {display:none;}
+body section header p.linkMenu a {color:inherit; text-decoration:none; padding:5px; background:#333; border-radius:5px;}
+body section header p.linkMenu a:hover {background:#000;}
+body section footer {text-align:center; margin:20px 0 5px;}
+body section footer img {width:20%;}
+body section form#menu {z-index:10001;}
+body section form#menu div.ui-menubar {border-radius:0;}
+body section div#peliculaMenu {z-index:10000; display:none; width:100%; height:100%; position:absolute; top:0px; left:0px; background:rgba(3,3,3,0.5);}
+body section div#peliculaMenu.ativo {display:block;}
+body section div#conteudo {padding:0; margin:0; border:0; overflow:auto;}
+body section aside #menu ul li a {font-weight:bold; text-shadow:0px 1px 0px #ccc;}
+
+/* transformação para dispositivos móveis */
+@media all and (max-width:600px) {
+	/* diminui tamanho dos textos */
+	body {font-size:0.8em;}	
+	/* aumenta imagem do rodapé */
+	body section footer img {width:50%;}
+	/* menu passa a ser na lateral */
+	body section header p.linkMenu {display:block;}
+	body section form#menu {position:relative; width:100%; float:right; font-size:1.2em; display:none; font-size:1em;}
+	body section form#menu.ativo {display:block;}
+	body section form#menu .ui-menubar {background:#555; border:none; position:absolute; right:0px; z-index:1000; box-shadow:-5px 5px 15px #000;}
+	body section form#menu .ui-menu .ui-menuitem {padding:6px 0; margin:0; width:100%;}
+	body section form#menu ul {display:block !important; top:0 !important; border-radius:0; border:none; box-shadow:none; background:none; width:auto; border-bottom:1px solid #777;}
+	body section form#menu ul li {clear:both; width:auto;}
+	body section form#menu ul li a {width:100%; color:#fff; text-shadow:1px 1px 5px #000;}
+	body section form#menu ul li a span.ui-icon-triangle-1-e {float:none;}
+	body section form#menu ul li.ui-menubar-options {float:none;}
+	body section form#menu ul li ul {float:none; position:relative; width:auto; padding-left:15px;}	
+}
+
+
+/* sobrescreve estilos do primefaces */
+/* para colocar barras de rolagem nos paineis que estourarem */
+body .ui-panel {overflow:auto;}
+/* tirar background dos títuos dos paineis */
+body .ui-panel-titlebar {background:none; border:none; font-size:1.2em;}
+/* para que o tamanho das tabelas utilizados nos componentes não afetam a visualização */
+body table.ui-selectoneradio, body .ui-picklist {width:auto;}
+/* para concertar layout */
+.ui-radiobutton *, .ui-selectonemenu * {-moz-box-sizing:content-box; -webkit-box-sizing:content-box; box-sizing:content-box;}
+/* efeito hover para as linhas das tabelas (datatable e treetable) */
+.ui-datatable table tbody tr td,
+.ui-treetable table tbody tr td {border:none !important;}
+.ui-datatable table tbody tr:hover, 
+.ui-treetable table tbody tr:hover {background:#C0D7E4; color:#000; border-bottom-color:#000; text-shadow:1px 1px #ccc;}
+/* alterar tamanho do componente calendar */
+.ui-calendar  {  
+ width: 65px !important;
+}
+
+/* outros estilos */
+div.limpa {clear:both;}
+.required {color:#E41026; font-weight:bold;}
+.paraRemocao {text-decoration:line-through;}
+div.camposObrigatorios {clear:both; margin:10px 0;}
+div.camposObrigatorios span {margin-right:5px;}
+.tamanho100 {width:100px;}
+.tamanho130 {width:130px;}
+.tamanho150 {width:150px;}
+.tamanho200 {width:200px;}
+.tamanhoCampoAcoesTabela {width:70px;}
+/* para nã outilizar 100% nas tabelas desejadas */
+.componenteTamanhoNormal {float:left;}
+.componenteTamanhoNormal table {width:auto;}
+/* tamanhos máximos para os campos de entrada de dados */
+.maxCampoTexto {max-width:300px;}
+.maxCampoTextoP {max-width:50px;}
+.maxCampoTextoG {max-width:500px;}
+.maxCampoSenha {max-width:150px;}
+.maxCampoCEP {max-width:80px;}
+.maxCampoCNPJ {max-width:130px;}
+.maxCampoNumeroP {max-width:50px;}
+.maxCampoNumeroM {max-width:150px;}
+.maxCampoNumeroG {max-width:200px;}

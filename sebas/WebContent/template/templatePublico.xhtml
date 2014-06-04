@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<link rel="icon" href="#{request.contextPath}/favicon.ico" type="image/x-icon"></link>
+	<title><h:outputText value="#{texto.sistema_nome}" /></title>
+	<meta name="viewport" content="width=device-width" />
+	<h:outputStylesheet library="css" name="public.css" />
+	<h:outputScript library="js" name="funcoesBasicas.js"  />
+	<ui:insert name="script"/>
+</h:head>
+<h:body>
+			<iframe width="100%" tabindex="-1" height="26px" src="http://www.mds.gov.br/assistenciasocial/entidades-de-assistencia-social#portal-masthead" scrolling="no" frameborder="0" ></iframe>		
+<div style="padding-bottom: 40px"></div>	
+	<section style=" padding-left:10% ;width: 80%">
+		<header>
+					<div class="limpa"></div>	
+		<h:form>
+			<span><a href="http://mds.gov.br"><h:graphicImage library="imagens" name="/public/logoMDS.png" alt="Ministério de Defesa Social" /></a></span>
+			<span><h:commandLink action="/index.xhtml"><h:graphicImage library="imagens" name="logo.png" alt="Cebas Online" style="width: 255px; float: right;" /></h:commandLink></span>
+			</h:form>
+			<div style="padding-bottom: 40px"></div>
+			<div class="limpa"></div>	
+			
+		</header>
+<!-- 		<iframe id="frame"   src="http://www.mds.gov.br/assistenciasocial/entidades-de-assistencia-social#menu-bar" scrolling="no" frameborder="0"> -->
+		
+<!-- 		</iframe> -->
+		<div style="padding-bottom: 40px"></div>
+		<ui:insert name="corpo" />
+		
+	
+	</section>
+			<div style="padding-bottom: 100px"></div>
+	<div id="fotter">
+					<iframe style="position:absolute;
+	bottom:0;
+	left:0;"  width="100%" tabindex="-1" height="50px" src="http://www.mds.gov.br/assistenciasocial/entidades-de-assistencia-social#rodape-tema" scrolling="no" frameborder="0" ></iframe>		
+	</div>
+</h:body>
+</html>

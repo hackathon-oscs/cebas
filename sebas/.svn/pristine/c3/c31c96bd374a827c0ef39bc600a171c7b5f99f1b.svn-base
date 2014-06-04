@@ -1,0 +1,116 @@
+<ui:composition template="/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+		<h:form rendered="#{moduloMB.utilController.statusListing and moduloMB.permissao.acesso == 's'}">
+			<p:panel header="Módulos">
+				<p:commandButton ajax="false" icon="ui-icon-document"
+					value="#{texto.botao_novo_registro}" 
+					title="#{texto.botao_novo_registro_desc}" 
+					action="#{moduloMB.criar()}"
+					rendered="#{moduloMB.permissao.inclusao == 's'}" />
+				<br/><br/>
+				
+				<p:treeTable value="#{moduloMB.arvoreModulos}" var="registro" 
+					emptyMessage="#{texto.nenhum_registro_encontrado}">
+					<p:column headerText="Nome">
+						<h:outputText value="#{registro.nome}" />
+					</p:column>
+					<p:column headerText="URL">
+						<h:outputText value="#{registro.url}" />
+					</p:column>
+					<p:column styleClass="tamanhoCampoAcoesTabela" headerText="#{texto.texto_para_coluna_acoes}">
+						<p:commandLink ajax="false" title="#{texto.acao_editar_registro}"
+							action="#{moduloMB.editar()}"
+							rendered="#{moduloMB.permissao.alteracao == 's'}">
+							<h:graphicImage value="/resources/imagens/icons/edit.png" />
+							<f:setPropertyActionListener target="#{moduloMB.modulo}"
+								value="#{registro}" />
+						</p:commandLink>
+						<p:spacer width="10px" />
+						<p:commandLink ajax="false"
+							title="#{texto.acao_desativar_registro}"
+							rendered="#{moduloMB.permissao.exclusao == 's'}"
+							action="#{moduloMB.preparaParaDesativar()}">
+							<h:graphicImage value="/resources/imagens/icons/remover.png" />
+							<f:setPropertyActionListener target="#{moduloMB.modulo}"
+								value="#{registro}" />
+						</p:commandLink>
+					</p:column>					
+				</p:treeTable>
+			</p:panel>
+		</h:form>
+			
+		<h:form rendered="#{!moduloMB.utilController.statusListing and !moduloMB.utilController.statusFiltering}"
+			binding="#{moduloMB.form}">
+			<p:panel header="Cadastro de Módulo">
+				<h:panelGrid columns="2" id="panel" columnClasses="tamanho100">
+					<h:outputLabel value="Nome:" for="nome">
+						<span class="required">*</span>
+					</h:outputLabel>
+					<p:inputText id="nome"
+						disabled="#{moduloMB.utilController.statusViewing || moduloMB.utilController.statusRemoving}"
+						value="#{moduloMB.modulo.nome}" styleClass="maxCampoTexto"
+						required="true" requiredMessage="#{texto.preencha_o_campo_x} Nome"
+						maxlength="255" />
+
+					<h:outputLabel value="Acessível:" for="acesso">
+						<span class="required">*</span>
+					</h:outputLabel>
+					<p:selectOneRadio id="acesso" value="#{moduloMB.modulo.acessivel}"
+						disabled="#{moduloMB.utilController.statusViewing || moduloMB.utilController.statusRemoving}"
+						required="true" requiredMessage="#{texto.preencha_o_campo_x} Acessível">
+						<f:selectItem itemValue="#{true}" itemLabel="Sim" />
+						<f:selectItem itemValue="#{false}" itemLabel="Não" />
+						<p:ajax update="url"/>
+					</p:selectOneRadio>
+
+					<h:outputLabel value="Url:" for="url">
+					</h:outputLabel>
+					<p:inputText id="url"
+						disabled="#{moduloMB.utilController.statusViewing || moduloMB.utilController.statusRemoving || !moduloMB.modulo.acessivel}"
+						value="#{moduloMB.modulo.url}" styleClass="maxCampoTexto" 
+						required="true" requiredMessage="#{texto.preencha_o_campo_x} URL"
+						maxlength="255" />
+
+					<h:outputLabel value="Ordem:" for="ordem">
+						<span class="required">*</span>
+					</h:outputLabel>
+					<p:inputText id="ordem"
+						disabled="#{moduloMB.utilController.statusViewing || moduloMB.utilController.statusRemoving}"
+						value="#{moduloMB.modulo.ordem}" styleClass="maxCampoNumeroP" 
+						required="true" requiredMessage="#{texto.preencha_o_campo_x} Ordem"
+						maxlength="10" />
+
+					<h:outputLabel value="Submodúlo:" for="subModulo"></h:outputLabel>
+					<p:selectOneMenu id="subModulo"	disabled="#{moduloMB.utilController.statusViewing || moduloMB.utilController.statusRemoving}"
+						value="#{moduloMB.modulo.subModulo}" filter="true">
+						<f:selectItem itemLabel="#{texto.opcao_selecione_combobox}" />
+						<f:selectItems value="#{moduloMB.listaSubModulos}" var="submodulo" itemLabel="#{submodulo.nome}" itemValue="#{submodulo}"
+							itemDisabled="#{submodulo == moduloMB.modulo}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+
+				<h:outputText value="#{texto.campos_obrigatorios}" escape="false" />
+				
+				<p:commandButton ajax="false" icon="ui-icon-disk" value="#{texto.botao_salvar_registro}"
+					title="#{texto.botao_salvar_registro_desc}" action="#{moduloMB.salvar()}"
+					rendered="#{moduloMB.utilController.statusInserting || moduloMB.utilController.statusEditing}" />
+				<p:spacer height="5px" />
+				<p:commandButton ajax="false" icon="ui-icon-trash" 
+					value="#{texto.botao_desativar_registro}" title="#{texto.botao_desativar_registro_desc}" 
+					action="#{moduloMB.desativar()}"
+					rendered="#{moduloMB.utilController.statusRemoving}" />
+				<p:spacer height="5px" />
+				<p:commandButton ajax="false" icon="ui-icon-closethick"
+					value="#{texto.botao_voltar}" title="#{texto.botao_voltar_desc}"
+					action="#{moduloMB.voltarLista()}"
+					immediate="true" />
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

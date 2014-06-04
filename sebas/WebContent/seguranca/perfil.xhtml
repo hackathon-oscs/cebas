@@ -1,0 +1,102 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//BR"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+		<h:form id="lista" rendered="#{perfilMB.utilController.statusListing and perfilMB.permissao.acesso == 's'}">
+			<p:panel id="panelFiltro" header="Filtro::Perfil">
+				<h:panelGrid columns="3">
+					<h:outputLabel value="Valor da Busca:" />
+					<p:inputText id="pesq" value="#{perfilMB.filtro}"  />
+					<p:selectOneMenu value="#{perfilMB.tipoFiltro}"	>
+						<f:selectItems value="#{perfilMB.listaPesquisa}" var="info"
+							itemLabel="#{info}" itemValue="#{info}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+				<p:commandButton ajax="false" icon="ui-icon-search"	value="Pesquisar" update="panelLista" title="Filtrar Registros"
+					action="#{perfilMB.buscarPorFiltro()}" />
+				<p:spacer height="5px" />
+				<p:commandButton ajax="false" icon="ui-icon-document" value="Criar"	title="Novo Registro" immediate="true"
+					action="#{perfilMB.criar()}" rendered="#{perfilMB.permissao.inclusao == 's'}"/>
+				<p:spacer height="5px" />
+				<p:commandButton ajax="false" icon="ui-icon-document-b" value="Limpar" title="Limpar Formulário"
+					action="#{perfilMB.voltarLista()}" update="pesq" />
+				<p:spacer height="5px" />
+			</p:panel>
+			<p:spacer width="5px" />
+			<p:panel id="panelLista" header="Listagem::Módulos" rendered="#{perfilMB.listaPerfis!= null}">
+
+				<p:dataTable rows="10" id="richTable" value="#{perfilMB.listaPerfis}" paginator="true" var="item"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15,25,50,100" paginatorPosition="bottom"
+					emptyMessage="Nenhum registro encontrado.">
+					
+					<p:column headerText="id"> 
+						<h:outputText value="#{item.id}" />
+	                </p:column>
+					<p:column headerText="nome">
+						<h:outputText value="#{item.nome}" />
+	                </p:column>
+				
+	                
+					<p:column style="width: 70px" headerText="Ações">
+						<p:commandLink ajax="false" title="Editar Registro"	action="#{perfilMB.editar()}" rendered="#{perfilMB.permissao.alteracao == 's'}">
+							<h:graphicImage value="/resources/imagens/icons/edit.png" />
+							<f:setPropertyActionListener target="#{perfilMB.perfil}" value="#{item}" />
+						</p:commandLink>
+						<p:spacer width="10px" />
+						<p:commandLink ajax="false" update="formLista" title="Desativar Registro" rendered="#{perfilMB.permissao.exclusao == 's'}"
+											action="#{perfilMB.preparaParaDesativar()}" >
+							<h:graphicImage value="/resources/imagens/icons/remover.png" />
+							<f:setPropertyActionListener target="#{perfilMB.perfil}" value="#{item}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+		<h:form id="formulario"	rendered="#{!perfilMB.utilController.statusListing and !perfilMB.utilController.statusFiltering}" styleClass="edit">
+			<p:panel id="panelFormulario" header="Formulário::Perfil">
+				<h:panelGrid columns="3" id="panel">
+					<h:outputLabel value="Nome:"><span class="required">*</span></h:outputLabel>
+					<p:inputText id="nome"	disabled="#{perfilMB.utilController.statusViewing || perfilMB.utilController.statusRemoving}"
+									value="#{perfilMB.perfil.nome}" style="width: 200px"/>
+					<p:message for="nome" errorClass="required" />
+					
+					<h:outputLabel value="Observação:"><span class="required">*</span></h:outputLabel>
+					<p:inputText id="observacao"	disabled="#{perfilMB.utilController.statusViewing || perfilMB.utilController.statusRemoving}"
+									value="#{perfilMB.perfil.observacao}" style="width: 200px"/>
+					<p:message for="observacao" errorClass="required" />
+					
+					
+
+				</h:panelGrid>
+
+				<div style="clear: both">
+					<span class="required">*</span> campos obrigatórios
+				</div>
+				<p:commandButton ajax="false" icon="ui-icon-disk" value="Salvar"
+					title="Salvar Registro" action="#{perfilMB.salvar()}"
+					rendered="#{perfilMB.utilController.statusInserting || perfilMB.utilController.statusEditing}" />
+				<p:spacer height="5px" />
+				<p:commandButton ajax="false" icon="ui-icon-trash" value="Desativar"
+					title="Desativar Registro" action="#{perfilMB.desativar()}"
+					rendered="#{perfilMB.utilController.statusRemoving}" />
+				<p:spacer height="5px" />
+				<p:commandButton ajax="false" icon="ui-icon-closethick"
+					value="Voltar" title="Voltar" action="#{perfilMB.voltarLista()}"
+					immediate="true" />
+				<p:spacer height="5px" />
+				<p:commandButton ajax="false" icon="ui-icon-home" value="Sair"
+					title="Voltar à tela inicial" action="#{perfilMB.voltarHome()}"
+					immediate="true" />
+			</p:panel>
+		</h:form>
+	
+
+	</ui:define>
+</ui:composition>

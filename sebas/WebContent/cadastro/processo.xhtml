@@ -1,0 +1,111 @@
+<ui:composition template="/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+	<h:panelGroup id="atualiza">
+		<h:form rendered="#{processoMB.utilController.statusListing and processoMB.permissao.acesso == 's'}">
+			<p:panel header="Processos">
+				<p:commandButton ajax="false" icon="ui-icon-document"
+					value="#{texto.botao_novo_registro}" 
+					title="#{texto.botao_novo_registro_desc}" 
+					action="#{processoMB.criar()}"
+					rendered="#{processoMB.permissao.inclusao == 's'}" />
+				<br/><br/>
+				
+				<p:dataTable id="tabelaProcesso" value="#{processoMB.listaProcessos}" 
+					paginator="true" var="item" filterEvent="enter"
+					rows="#{texto.quantidade_itens_padrao_listagem}"
+					paginatorTemplate="#{texto.paginatorTemplate}"
+					rowsPerPageTemplate="#{texto.rowsPerPageTemplate}" 
+					paginatorPosition="#{texto.paginatorPosition}"
+					emptyMessage="#{texto.nenhum_registro_encontrado}">
+
+					<p:column headerText="ID Processo" filterBy="#{item.id}" sortBy="#{item.id}" filterMatchMode="contains">
+						<h:outputText value="#{item.id}" />
+					</p:column>
+					<p:column headerText="Entidade" filterBy="#{item.entidade.nomeFantasia}" sortBy="#{item.entidade.nomeFantasia}" filterMatchMode="contains">
+						<h:outputText value="#{item.entidade.nomeFantasia}" />
+					</p:column>
+					<p:column headerText="Status do Processo" filterBy="#{item.status.descricao}" sortBy="#{item.status.descricao}" filterMatchMode="contains">
+						<h:outputText value="#{item.status.descricao}" />
+					</p:column>
+					
+
+					<p:column styleClass="tamanhoCampoAcoesTabela" headerText="#{texto.texto_para_coluna_acoes}">
+						<p:commandLink ajax="false" title="#{texto.acao_editar_registro}" 
+							rendered="#{processoMB.permissao.alteracao == 's'}"
+							action="#{processoMB.editar()}">
+							<h:graphicImage value="/resources/imagens/icons/edit.png" />
+							<f:setPropertyActionListener target="#{processoMB.processo}"
+								value="#{item}" />
+						</p:commandLink>
+						<p:spacer width="10px" />
+						<p:commandLink ajax="false" update="formLista" rendered="#{processoMB.permissao.exclusao == 's'}"
+							title="#{texto.acao_desativar_registro}"
+							action="#{processoMB.preparaParaDesativar()}">
+							<h:graphicImage value="/resources/imagens/icons/remover.png" />
+							<f:setPropertyActionListener target="#{processoMB.processo}"
+								value="#{item}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+		
+		<h:form id="cadastro" rendered="#{!processoMB.utilController.statusListing and !processoMB.utilController.statusFiltering}"
+			binding="#{processoMB.form}">
+			<p:panel header="Cadastro de Processo">
+				<h:panelGrid columns="2" id="panel" columnClasses="tamanho100">
+					<h:outputLabel value="Tipo de Processo" />
+					<p:inputText disabled="true" id="tipoProcesso" value="#{processoMB.processo.tipoProcesso.nome}"/>
+					<h:outputText value="Assunto: " />
+					<p:selectOneMenu id="assuntos" value="#{processoMB.processo.assuntoProcesso}" >
+						<f:selectItem itemLabel="Selecione a Entidade" />
+						<f:selectItems value="#{processoMB.listaAssuntos}" var="assunto" itemLabel="#{assunto.descricao}"></f:selectItems>
+					</p:selectOneMenu>
+				</h:panelGrid>
+				
+				<p:commandButton ajax="false" icon="ui-icon-disk" immediate="false" value="Informações Completas" process="@this, :cadastro" action="#{processoMB.salvar()}"  
+					title="#{texto.botao_salvar_registro_desc}" 
+					rendered="#{processoMB.utilController.statusInserting || processoMB.utilController.statusEditing}" />
+				<p:spacer height="5px" />
+				<p:commandButton ajax="true" icon="ui-icon-disk" onsuccess="PF('problemaDialog').show();"
+				 value="Informações Pendentes "
+					title="#{texto.botao_salvar_registro_desc}" 
+					rendered="#{processoMB.utilController.statusInserting || processoMB.utilController.statusEditing}" />
+				<p:spacer height="5px" />
+				<p:commandButton ajax="false" icon="ui-icon-trash" 
+					value="#{texto.botao_desativar_registro}" title="#{texto.botao_desativar_registro_desc}" 
+					action="#{processoMB.desativar()}"
+					rendered="#{processoMB.utilController.statusRemoving}" />
+				<p:spacer height="5px" />
+				<p:commandButton ajax="false" icon="ui-icon-closethick"
+					value="#{texto.botao_voltar}" title="#{texto.botao_voltar_desc}" 
+					action="#{processoMB.voltarLista()}"
+					immediate="true" />
+			</p:panel>
+		</h:form>
+		<h:form id="dialog">
+			<p:dialog visible="true" modal="true" closable="false" rendered="#{!processoMB.utilController.statusListing and !processoMB.utilController.statusFiltering and !processoMB.utilController.statusViewing}" widgetVar="entidadeDialog" header="Selecione a entidade: ">
+				<h:panelGrid columns="1">
+				<p:selectOneMenu filter="true" filterMatchMode="contains" value="#{processoMB.processo.entidade}">
+					<f:selectItem itemLabel="Selecione a entidade"/>
+					<f:selectItems var="entidade" value="#{processoMB.listaEntidades}" itemValue="#{entidade}" itemLabel="#{entidade.cnpj}"></f:selectItems>
+				</p:selectOneMenu>
+				<p:commandButton value="Inserir Processo" action="#{processoMB.verificaProcesso}" update=":cadastro"  onsuccess="PF('entidadeDialog').hide();"/>
+				</h:panelGrid>
+			</p:dialog>
+			<p:dialog widgetVar="problemaDialog" header="Pendências" closable="false" modal="true">
+				<h:panelGrid columns="1">
+					<h:outputText value="Observações para Entidade: " />
+					<p:editor value="#{processoMB.validacao.observacao}"/>
+				</h:panelGrid>
+				<p:commandButton action="#{processoMB.enviarProblema}" immediate="true" ajax="false" process="@this, dialog" value="Enviar para Entidade" />
+			</p:dialog>
+		</h:form>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

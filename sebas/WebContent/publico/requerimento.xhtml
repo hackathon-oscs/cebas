@@ -1,0 +1,216 @@
+<ui:composition template="/template/templatePublico.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="corpo">
+		<h:form id="formCadastro" enctype="multipart/form-data"
+			binding="#{entidadePublicaMB.form}">
+			<h1>Requerimento de Certificação</h1><br/>
+			<p:panel>
+				<h:panelGrid columns="2" id="panel" columnClasses="tamanho100">
+					<h:outputLabel value="Nome empresarial:" />
+					<p:inputText id="nomeEmpresarial" styleClass="maxCampoTextoG"
+						value="#{entidadePublicaMB.entidade.nomeEmpresarial}" />
+
+					<h:outputLabel value="Nome fantasia:" />
+					<p:inputText id="nomeFantasia" styleClass="maxCampoTextoG"
+						value="#{entidadePublicaMB.entidade.nomeFantasia}" />
+
+					<h:outputLabel value="CNPJ:" />
+					<p:inputMask id="cnpj" value="#{entidadePublicaMB.entidade.cnpj}"
+						mask="99.999.999/9999-99" styleClass="maxCampoCNPJ"/>
+
+					<h:outputLabel value="Data de abertura:" />
+					<p:calendar id="dataAbertura" 
+						value="#{entidadePublicaMB.entidade.dataAbertura.time}"
+						pattern="dd/MM/yyyy" mask="true" />
+
+					<h:outputLabel value="Data de fundação:" />
+					<p:calendar id="dataFundacao"
+						value="#{entidadePublicaMB.entidade.dataFundacao.time}"
+						pattern="dd/MM/yyyy" mask="true" />
+
+					<h:outputLabel value="Logradouro:" />
+					<h:panelGrid columns="2">
+						<p:inputText id="logradouro" styleClass="maxCampoTexto"
+							value="#{entidadePublicaMB.entidade.endereco.logradouro}" />
+						<p:inputText id="numero" styleClass="maxCampoTexto"
+							value="#{entidadePublicaMB.entidade.endereco.numero}"
+							placeholder="Nº" />
+					</h:panelGrid>
+
+					<h:outputLabel value="Complemento:" />
+					<p:inputText id="complemento" styleClass="maxCampoTexto"
+						value="#{entidadePublicaMB.entidade.endereco.complemento}" />
+
+					<h:outputLabel value="Cep:" />
+					<p:inputMask id="cep" styleClass="maxCampoCEP"
+						value="#{entidadePublicaMB.entidade.endereco.cep}"
+						mask="99.999-999" />
+
+					<h:outputLabel value="Bairro:" />
+					<p:inputText id="bairro" styleClass="maxCampoTexto"
+						value="#{entidadePublicaMB.entidade.endereco.bairro}" />
+
+					<h:outputLabel value="UF:" />
+					<h:panelGrid columns="2">
+						<p:selectOneMenu id="estado" value="#{entidadePublicaMB.estado}"
+							filter="true" filterMatchMode="contains">
+							<f:selectItem itemLabel="Selecione" />
+							<f:selectItems value="#{entidadePublicaMB.listaEstados}"
+								var="estado" itemLabel="#{estado.nome}" itemValue="#{estado}" />
+							<p:ajax update="cidade" />
+						</p:selectOneMenu>
+						<p:selectOneMenu id="cidade"
+							value="#{entidadePublicaMB.entidade.endereco.cidade}"
+							filter="true" filterMatchMode="contains">
+							<f:selectItem itemLabel="Cidade" />
+							<f:selectItems value="#{entidadePublicaMB.estado.cidades}"
+								var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+				</h:panelGrid>
+				<br />
+				<h:panelGrid columns="1">
+					<h:outputLabel
+						value="Código e descrição da atividade e econômica principal (CNAE):" />
+					<p:selectOneMenu id="atividadeEconomica"
+						value="#{entidadePublicaMB.entidade.atividadeEconomica}"
+						filter="true" filterMatchMode="contains">
+						<f:selectItem itemLabel="Selecione a atividade econômica" />
+						<f:selectItems
+							value="#{entidadePublicaMB.listaAtividadeEconomicas}" var="ae"
+							itemLabel="#{ae.codigoAtividade} - #{ae.descricaoAtividade}"
+							itemValue="#{ae}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+
+				<p:commandButton value="Adicionar contato" 
+					oncomplete="PF('dialogContato').show();" />
+				<br />
+				<p:dataTable id="tabelaContato"
+					value="#{entidadePublicaMB.entidade.contatos}" var="contato"
+					emptyMessage="#{texto.nenhum_registro_encontrado}">
+					<p:column headerText="Tipo do contato">
+						<h:outputText value="#{contato.tipoContato.nome}" />
+					</p:column>
+					<p:column headerText="Descrição">
+						<h:outputText value="#{contato.nome}" />
+					</p:column>
+				</p:dataTable>
+				<br />
+				<br />
+				<p:fieldset legend="Dados do Presidente">
+					<h:panelGrid columns="2" columnClasses="tamanho100">
+						<h:outputLabel value="Nome:" />
+						<p:inputText value="#{entidadePublicaMB.entidade.presidente.nome}" styleClass="maxCampoTexto"/>
+
+						<h:outputLabel value="Data de nascimento:" />
+						<p:calendar id="dataNascimento"
+							value="#{entidadePublicaMB.entidade.presidente.nascimento.time}"
+							pattern="dd/MM/yyyy" mask="true" />
+
+						<h:outputLabel value="CPF:" />
+						<p:inputMask id="cpf" styleClass="maxCampoCNPJ"
+							value="#{entidadePublicaMB.entidade.presidente.cpf}"
+							mask="999.999.999-99" />
+
+						<h:outputLabel value="Número RG:" />
+						<p:inputText id="rg" styleClass="maxCampoTexto"
+							value="#{entidadePublicaMB.entidade.presidente.rg}" />
+
+						<h:outputLabel value="Órgão expedidor/UF:" />
+						<p:inputText id="orgaoExpedidor" styleClass="maxCampoTexto"
+							value="#{entidadePublicaMB.entidade.presidente.orgaoExpeditor}" />
+
+						<h:outputLabel value="Mandato da diretoria:" />
+						<h:panelGrid columns="2">
+							<p:calendar id="inicioMandato" styleClass="maxCampoTexto"
+								value="#{entidadePublicaMB.entidade.presidente.inicioMandato.time}"
+								pattern="dd/MM/yyyy" mask="true" placeholder="Início" />
+							<p:calendar id="fimMandato" styleClass="maxCampoTexto"
+								value="#{entidadePublicaMB.entidade.presidente.fimMandato.time}"
+								pattern="dd/MM/yyyy" mask="true" placeholder="Fim" />
+						</h:panelGrid>
+
+						<h:outputLabel value="E-mail:" />
+						<p:inputText id="email" styleClass="maxCampoTexto"
+							value="#{entidadePublicaMB.entidade.presidente.email}" />
+
+						<h:outputLabel value="Telefone:" />
+						<p:inputText id="telefone" styleClass="maxCampoTexto"
+							value="#{entidadePublicaMB.entidade.presidente.telefone}" />
+					</h:panelGrid>
+				</p:fieldset>
+				<br />
+				<br />
+				<p:fieldset legend="Anexos">
+					<h:panelGrid id="panelDocumento" columns="2" columnClasses="tamanho100">
+						<h:outputLabel value="Tipo do documento:" />
+						<p:selectOneMenu id="tipoDocumento"
+							value="#{entidadePublicaMB.documentoNecessario.tipoDocumento}">
+							<f:selectItem itemLabel="Selecione" />
+							<f:selectItems value="#{entidadePublicaMB.listaTipoDocumentos}"
+								var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}" />
+						</p:selectOneMenu>
+
+						<h:outputLabel value="Documento:" />
+						<p:fileUpload id="caminho" fileLimit="1" label="Adicionar"
+							cancelLabel="Cancelar" uploadLabel="Enviar"
+							fileUploadListener="#{entidadePublicaMB.upload}" process="@this" />
+					</h:panelGrid>
+					<p:commandButton value="Adicionar"
+						action="#{entidadePublicaMB.adicionaDocumento}"
+						process="@this, panelDocumento"
+						update="panelDocumento tabelaDocumento" immediate="true" />
+
+					<p:dataTable id="tabelaDocumento"
+						value="#{entidadePublicaMB.entidade.documentoNecessarios}"
+						var="doc" emptyMessage="Nenhum documento anexado">
+						<p:column headerText="Tipo do documento">
+							<h:outputText value="#{doc.tipoDocumento.nome}" />
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+
+				<h:outputText value="#{texto.campos_obrigatorios}" escape="false" />
+
+				<p:commandButton icon="ui-icon-disk" process="@this, formCadastro"
+					value="#{texto.botao_salvar_registro}"
+					title="#{texto.botao_salvar_registro_desc}"
+					action="#{entidadePublicaMB.salvar()}" oncomplete="PF('dialogConfirmReq').show();"/>
+				<p:spacer height="5px" />
+				<p:commandButton ajax="false" icon="ui-icon-trash"
+					value="#{texto.botao_desativar_registro}"
+					title="#{texto.botao_desativar_registro_desc}"
+					action="#{entidadePublicaMB.desativar()}"
+					rendered="#{entidadePublicaMB.utilController.statusRemoving}" />
+				<p:spacer height="5px" />
+				<p:commandButton ajax="false" icon="ui-icon-closethick"
+					rendered="false" value="#{texto.botao_voltar}"
+					title="#{texto.botao_voltar_desc}"
+					action="#{entidadePublicaMB.voltarLista()}" immediate="true" />
+			</p:panel>
+			
+			<p:dialog id="dialConfirmReq" widgetVar="dialogConfirmReq" modal="true" resizable="false" closable="false">
+				<h:outputLabel value="Requerimento enviado!" /><br/>
+				<p:commandButton value="Ok" ajax="false" action="#{entidadePublicaMB.index}"/>
+			</p:dialog>
+		</h:form>
+
+		<h:form id="formContato">
+			<p:dialog id="dialContato" widgetVar="dialogContato" modal="true"
+				resizable="false">
+				<ui:include src="/cadastro/partials/contato.xhtml" />
+				<br />
+				<p:commandButton value="Adicionar"
+					action="#{entidadePublicaMB.adicionaContato()}"
+					oncomplete="PF('dialogContato').hide();"
+					update=":formCadastro:tabelaContato :formContato:panelCadastro"
+					process="@this, panelCadastro" />
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
